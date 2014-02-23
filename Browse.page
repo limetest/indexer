@@ -1,0 +1,3 @@
+Icon="icons/folder_explore.png"
+Title="Index of $dir"
+Type="php"

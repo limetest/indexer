@@ -1,0 +1,50 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "indexer">
+<!ENTITY author    "LimeTech">
+<!ENTITY version   "2014.02.22">
+<!ENTITY pluginURL "https://raw.github.com/limetest/&name;/master/&name;.plg">
+]>
+
+<PLUGIN  name="&name;"
+         author="&author;"
+         version="&version;"
+         pluginURL="&pluginURL;">
+<!--
+get from github as tarball
+-->
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tar.gz">
+<URL>"https://github.com/limetest/&name;/archive/&version;.tar.gz"</URL>
+</FILE>
+
+<!--
+The 'install' script.
+-->
+<FILE Name="/tmp/plugins/tmp" Run="/bin/bash">
+<INLINE>
+if [ ! -d /tmp/plugins/builtin/&name; ]; then
+  mkdir -p /tmp/plugins/builtin
+  mv /usr/local/emhttp/plugins/&name; /tmp/plugins/builtin
+else
+  rm -r /usr/local/emhttp/plugins/&name;
+fi
+tar -xf /boot/config/plugins/&name;/&name;-&version;.tar.gz -C /usr/local/emhttp/plugins
+mv /usr/local/emhttp/plugins/&name;-&version; /usr/local/emhttp/plugins/&name;
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Name="/tmp/plugins/tmp" Run="/bin/bash" Method="remove">
+<INLINE>
+if [ -d /tmp/plugins/builtin/&name; ]; then
+  rm -r /usr/local/emhttp/plugins/&name;
+  mv /tmp/plugins/builtin/&name; /usr/local/emhttp/plugins
+  ln -sf /usr/local/emhttp/plugins/&name;/&name;.plg /var/log/plugins
+fi;
+</INLINE>
+</FILE>
+
+</PLUGIN>
